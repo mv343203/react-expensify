@@ -1,4 +1,5 @@
 import {v4 as uuid} from 'uuid';
+import database from '../firebase/firebase';
 
 
 //this creates an action to interact with store with default properties 
@@ -6,23 +7,29 @@ import {v4 as uuid} from 'uuid';
 //this actions is stating to add the expense to the store 
 //use the default properties listed first if nothing is provided
 //we will be adding the object of expense on the array 
-export const addExpense = (
-    {
+export const addExpense = (expense) => ({
+         type: 'ADD_EXPENSE',
+         expense
+});
+
+export const startAddExpense = (expenseData = {}) => {
+    return (dispatch) => {
+     const {
         description = '', 
         note = '', 
         amount = 0,
         createdAt = 0
-      } = {}
-    ) => ({
-         type: 'ADD_EXPENSE',
-         expense: {
-           id: uuid(),
-           description,
-           note,
-           amount,
-           createdAt
-    }
-});
+     } = expenseData;
+     const expense = { description, note, amount, createdAt };
+
+    return database.ref('expense').push(expense).then((ref) => {
+         dispatch(addExpense({
+           id: ref.key,
+           ...expense  
+         }));
+     });
+    };
+};
 
 //creates action to interact with store by fetching id property
 //fetches the id property  
