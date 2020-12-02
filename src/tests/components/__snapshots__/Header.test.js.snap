@@ -18,6 +18,10 @@ exports[`should render Header correctly 1`] = `
   >
     Create Expense
   </[object Object]>
-  u    
+  <button
+    onClick={[Function]}
+  >
+    Logout
+  </button>
 </header>
 `;
